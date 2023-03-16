@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:glitch_stock_market/constants.dart';
+import 'package:glitch_stock_market/views/email_verification.dart';
 import 'package:glitch_stock_market/views/login_screen.dart';
 import 'package:http/http.dart' as http;
 
@@ -57,10 +58,10 @@ class AuthService {
       final docUser = FirebaseFirestore.instance.collection('users').doc(email);
       final emailData = {'email': email, 'name': name};
       await docUser.set(emailData);
-      Fluttertoast.showToast(
-          msg: "Registration Successful", backgroundColor: color1);
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => SearchScreen()));
+      
+             Navigator.push(
+          context, MaterialPageRoute(builder: (context) => EmailVerification()));
+     
     } on FirebaseAuthException catch (error) {
       switch (error.code) {
         case "invalid-email":
@@ -150,8 +151,8 @@ class AuthService {
         Fluttertoast.showToast(
             msg: "Login Successful",
             backgroundColor: color1);
-          Navigator.push(
-          context, MaterialPageRoute(builder: (context) => SearchScreen()));
+       Navigator.pushAndRemoveUntil(
+          context, MaterialPageRoute(builder: (context) => SearchScreen()),(route)=>false);
       } on FirebaseAuthException catch (error) {
         switch (error.code) {
           case "invalid-email":
