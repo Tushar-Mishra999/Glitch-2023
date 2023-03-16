@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:glitch_stock_market/constants.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class RoundedSearchBar extends StatelessWidget {
   final String hintText;
-  final ValueChanged<String> onChanged;
+  final ValueChanged<String> onSubmitted;
 
   const RoundedSearchBar({
     Key? key,
     required this.hintText,
-    required this.onChanged,
+    required this.onSubmitted,
   }) : super(key: key);
 
   @override
@@ -20,14 +21,18 @@ class RoundedSearchBar extends StatelessWidget {
         borderRadius: BorderRadius.circular(30),
         color: color2,
       ),
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         children: [
           const Icon(Icons.search, color: Color.fromARGB(255, 176, 176, 176)),
-          SizedBox(width: 15),
+          const SizedBox(width: 15),
           Expanded(
             child: TextField(
-              onChanged: onChanged,
+               style:GoogleFonts.sourceSansPro(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15),
+              onSubmitted: onSubmitted,
               decoration: InputDecoration(
                   hintText: hintText,
                   border: InputBorder.none,

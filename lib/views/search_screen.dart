@@ -1,11 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:glitch_stock_market/constants.dart';
+import 'package:glitch_stock_market/models/company.dart';
+import 'package:glitch_stock_market/services/search-service.dart';
+import 'package:glitch_stock_market/views/info_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../components/rounded_searchbar.dart';
+import '../models/nifty100.dart';
 
-class SearchScreen extends StatelessWidget {
+class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
+
+  @override
+  State<SearchScreen> createState() => _SearchScreenState();
+}
+
+class _SearchScreenState extends State<SearchScreen> {
+  List<Nifty> niftyList = [];
+  bool isLoaded = true;
+  void fetchNifty() async {
+    SearchService searchService = SearchService();
+    niftyList = await searchService.getNifty();
+    isLoaded = false;
+    setState(() {});
+  }
+
+  void fetchCompany(String name,BuildContext context) async {
+    SearchService searchService = SearchService();
+    Company company = await searchService.searchCompany(companyName: name);
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => InfoScreen(
+                  company: company,
+                )));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+   // fetchNifty();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +64,8 @@ class SearchScreen extends StatelessWidget {
               ),
               RoundedSearchBar(
                 hintText: 'Search for your company',
-                onChanged: (value) {
-                  // Handle search query
+                onSubmitted: (value) {
+                  Fluttertoast.showToast(msg: "Done bhai $value");
                 },
               ),
               SizedBox(
@@ -42,7 +78,7 @@ class SearchScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'NIFTY 100',
+                      'Top Gainers',
                       style: GoogleFonts.sourceSansPro(
                           color: Colors.grey.shade100,
                           fontSize: 22,
@@ -58,52 +94,36 @@ class SearchScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              for (int i = 0; i < 2; i++)
-                Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(
-                          left: 30.0, right: 30, top: 15, bottom: 15),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Ambuja Cement',
-                            style: GoogleFonts.sourceSansPro(
-                                color: Colors.grey.shade400, fontSize: 20),
+              isLoaded
+                  ? const CircularProgressIndicator(color: color1)
+                  : ListView.builder(
+                      shrinkWrap: true,
+                      itemCount:
+                          niftyList.length, // the number of items in the list
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.only(
+                              left: 30.0, right: 30, top: 15, bottom: 15),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                niftyList[index].name,
+                                style: GoogleFonts.sourceSansPro(
+                                    color: Colors.grey.shade400, fontSize: 20),
+                              ),
+                              Text(
+                                niftyList[index].price,
+                                style: GoogleFonts.sourceSansPro(
+                                    color: Colors.green.shade500,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w900),
+                              )
+                            ],
                           ),
-                          Text(
-                            "\$50",
-                            style: GoogleFonts.sourceSansPro(
-                                color: Colors.green.shade500,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w900),
-                          )
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(30.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Adani Enterprises',
-                            style: GoogleFonts.sourceSansPro(
-                                color: Colors.grey.shade400, fontSize: 20),
-                          ),
-                          Text(
-                            "\$69",
-                            style: GoogleFonts.sourceSansPro(
-                                color: Colors.red.shade500,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w900),
-                          )
-                        ],
-                      ),
+                        );
+                      },
                     )
-                  ],
-                ),
             ]),
           ),
         ),

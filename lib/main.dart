@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:glitch_stock_market/views/info_screen.dart';
 import 'package:glitch_stock_market/views/onboarding_screen.dart';
+import 'package:glitch_stock_market/views/search_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: InfoScreen(),
+      home: SearchScreen(),
     );
   }
 }
