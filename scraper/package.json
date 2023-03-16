@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "child_process": "^1.0.2",
+    "express": "^4.18.2",
+    "node-cron": "^3.0.2",
+    "puppeteer": "^19.6.2",
+    "request": "^2.88.2"
+  }
+}
