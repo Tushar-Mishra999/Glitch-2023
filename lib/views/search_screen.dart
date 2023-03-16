@@ -26,7 +26,7 @@ class _SearchScreenState extends State<SearchScreen> {
     setState(() {});
   }
 
-  void fetchCompany(String name,BuildContext context) async {
+  void fetchCompany(String name, BuildContext context) async {
     SearchService searchService = SearchService();
     Company company = await searchService.searchCompany(companyName: name);
     Navigator.push(
@@ -40,7 +40,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void initState() {
     super.initState();
-   // fetchNifty();
+    // fetchNifty();
   }
 
   @override
@@ -65,7 +65,7 @@ class _SearchScreenState extends State<SearchScreen> {
               RoundedSearchBar(
                 hintText: 'Search for your company',
                 onSubmitted: (value) {
-                  Fluttertoast.showToast(msg: "Done bhai $value");
+                  fetchCompany(value, context);
                 },
               ),
               SizedBox(
@@ -73,7 +73,7 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
               Padding(
                 padding:
-                    EdgeInsets.only(left: 30.0, right: 30, top: 15, bottom: 15),
+                    const EdgeInsets.only(left: 30.0, right: 30, top: 15, bottom: 15),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
