@@ -4,6 +4,7 @@ import os
 import re
 import time
 import uuid
+import requests as rq
 from datetime import datetime, timedelta
 
 import boto3
@@ -52,7 +53,13 @@ def signup():
     phone = data['phone']
 
 
-@app.
+@app.get('/topmovers')
+@cross_origin()
+def topmovers():
+    data=rq.get("https://www.nseindia.com/api/equity-stockIndices?index=NIFTY%20100",headers={'User-Agent': rq.get('http://localhost:5000/ua').text}).text
+    data=json.loads(data)
+    data=data['data']
+    
     
 
 @app.get('/graph')

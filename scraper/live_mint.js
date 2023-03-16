@@ -20,7 +20,7 @@ let autoscroll = async function (page) {
     });
 }
 
-let getNews = async function (browser, link) {
+let live_mint = async function (browser, link) {
     page=await browser.newPage();
     page.setUserAgent(utils.getUserAgent());
     await page.goto(link, { waitUntil: 'networkidle2' });

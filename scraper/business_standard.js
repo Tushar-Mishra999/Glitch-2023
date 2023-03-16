@@ -20,7 +20,7 @@ let autoscroll = async function (page) {
     });
 }
 
-let getNews = async function (browser, link) {
+let business_standard = async function (browser, link) {
     page=await browser.newPage();
     page.setUserAgent(utils.getUserAgent());
     await page.goto(link, { waitUntil: 'networkidle2' });
@@ -28,7 +28,7 @@ let getNews = async function (browser, link) {
     autoscroll(page);
     let news;
     news=await page.evaluate(() => {
-        return document.querySelector('[class^="artText"]')?.innerText;
+        return [...document.querySelector('.p-content').querySelectorAll('p')].map(e=>e.innerText).join(' ').trim();
     });
     return news;
 }
