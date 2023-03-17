@@ -1,9 +1,9 @@
 const utils = require('./common.js');
 const puppeteer = require('puppeteer');
 
-async function economic_times(link, retry = 0) {
+async function economic_times(link, headless, retry = 0) {
     try {
-    const browser = await puppeteer.launch({ headless: false, timeout: 120000 });
+    const browser = await puppeteer.launch({ headless: headless, timeout: 120000 });
     page = await browser.newPage();
     page.setUserAgent(utils.getUserAgent());
     await page.goto(link, { waitUntil: 'networkidle2' });
@@ -22,6 +22,6 @@ async function economic_times(link, retry = 0) {
     }
 }
 
-exports.economic_times = async function (link) {
-    return await economic_times(link);
+exports.economic_times = async function (link, headless) {
+    return await economic_times(link, headless);
 }

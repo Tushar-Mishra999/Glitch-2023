@@ -1,9 +1,9 @@
 const utils = require('./common.js');
 const puppeteer = require('puppeteer');
 
-async function financial_express (link, retry = 0) {
+async function financial_express (link, headless, retry = 0) {
     try{
-    const browser = await puppeteer.launch({ headless: false, timeout: 120000 });
+    const browser = await puppeteer.launch({ headless: headless, timeout: 120000 });
     page = await browser.newPage();
     page.setUserAgent(utils.getUserAgent());
     await page.goto(link, { waitUntil: 'networkidle2' });
@@ -22,6 +22,6 @@ async function financial_express (link, retry = 0) {
     }
 }
 
-exports.financial_express = async function(link) {
-    return await financial_express(link);
+exports.financial_express = async function(link, headless) {
+    return await financial_express(link, headless);
 }

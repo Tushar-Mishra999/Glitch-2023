@@ -1,9 +1,9 @@
 const utils = require('./common.js');
 const puppeteer = require('puppeteer');
 
-async function business_today (link, retry = 0) {
+async function business_today (link, headless, retry = 0) {
     try{
-    const browser = await puppeteer.launch({ headless: false, timeout: 120000 });
+    const browser = await puppeteer.launch({ headless: headless, timeout: 120000 });
     page = await browser.newPage();
     page.setUserAgent(utils.getUserAgent());
     await page.goto(link, { waitUntil: 'networkidle2' });
@@ -22,6 +22,6 @@ async function business_today (link, retry = 0) {
     }
 }
 
-exports.business_today = async function(link) {
-    return await business_today(link);
+exports.business_today = async function(link, headless) {
+    return await business_today(link, headless);
 }

@@ -1,9 +1,9 @@
 const utils = require('./common.js');
 const puppeteer = require('puppeteer');
 
-async function live_mint(link, retry = 0) {
+async function live_mint(link, headless, retry = 0) {
     try {
-    let browser = await puppeteer.launch({ headless: false, timeout: 120000 });
+    let browser = await puppeteer.launch({ headless: headless, timeout: 120000 });
     let page = await browser.newPage();
     page.setUserAgent(utils.getUserAgent());
     await page.goto(link, { waitUntil: 'networkidle2' });
@@ -22,6 +22,6 @@ async function live_mint(link, retry = 0) {
     }
 }
 
-exports.live_mint = async function (link) {
-    return await live_mint(link);
+exports.live_mint = async function (link, headless) {
+    return await live_mint(link, headless);
 }

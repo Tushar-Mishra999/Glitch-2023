@@ -14,61 +14,73 @@ const times_now = require('./times_now').times_now;
 const indian_times = require('./indian_times').indian_times;
 
 
-async function getNews(links, retry = 0) {
+async function getNews(links, headless, retry = 0) {
     let allNews = '';
+    let usedLinks = [];
     try {
         for (let i = 0; i < links.length; i++) {
-            if (links[i].link.includes('indiatimes')) {
-                let news = await indian_times(links[i].link);
-                allNews += (' ' + news);
-            }
+            if (links[i].date.includes('day') || links[i].date.includes('hour') || links[i].date.includes('minute') || links[i].date.includes('week')) {
+                if (links[i].link.includes('indiatimes')) {
+                    let news = await indian_times(links[i].link, headless);
+                    allNews += (' ' + news);
+                    usedLinks.push(links[i].link);
+                }
 
-            else if (links[i].link.includes('economictimes')) {
-                let news = await economic_times(links[i].link);
-                allNews += (' ' + news);
-            }
+                else if (links[i].link.includes('economictimes')) {
+                    let news = await economic_times(links[i].link, headless);
+                    allNews += (' ' + news);
+                    usedLinks.push(links[i].link);
+                }
 
-            else if (links[i].link.includes('hindu')) {
-                let news = await hindu(links[i].link);
-                allNews += (' ' + news);
-            }
+                else if (links[i].link.includes('hindu')) {
+                    let news = await hindu(links[i].link, headless);
+                    allNews += (' ' + news);
+                    usedLinks.push(links[i].link);
+                }
 
-            else if (links[i].link.includes('businesstoday')) {
-                let news = await business_today(links[i].link);
-                allNews += (' ' + news);
-            }
+                else if (links[i].link.includes('businesstoday')) {
+                    let news = await business_today(links[i].link, headless);
+                    allNews += (' ' + news);
+                    usedLinks.push(links[i].link);
+                }
 
-            else if (links[i].link.includes('moneycontrol')) {
-                let news = await moneycontrol(links[i].link);
-                allNews += (' ' + news);
-            }
+                else if (links[i].link.includes('moneycontrol')) {
+                    let news = await moneycontrol(links[i].link, headless);
+                    allNews += (' ' + news);
+                    usedLinks.push(links[i].link);
+                }
 
-            else if (links[i].link.includes('timesnow')) {
-                let news = await times_now(links[i].link);
-                allNews += (' ' + news);
-            }
+                else if (links[i].link.includes('timesnow')) {
+                    let news = await times_now(links[i].link, headless);
+                    allNews += (' ' + news);
+                    usedLinks.push(links[i].link);
+                }
 
-            else if (links[i].link.includes('livemint')) {
-                let news = await live_mint(links[i].link);
-                allNews += (' ' + news);
-            }
+                else if (links[i].link.includes('livemint')) {
+                    let news = await live_mint(links[i].link, headless);
+                    allNews += (' ' + news);
+                    usedLinks.push(links[i].link);
+                }
 
-            else if (links[i].link.includes('business-standard')) {
-                let news = await business_standard(links[i].link);
-                allNews += (' ' + news);
-            }
+                else if (links[i].link.includes('business-standard')) {
+                    let news = await business_standard(links[i].link, headless);
+                    allNews += (' ' + news);
+                    usedLinks.push(links[i].link);
+                }
 
-            else if (links[i].link.includes('financialexpress')) {
-                let news = await financial_express(links[i].link);
-                allNews += (' ' + news);
+                else if (links[i].link.includes('financialexpress')) {
+                    let news = await financial_express(links[i].link, headless);
+                    allNews += (' ' + news);
+                    usedLinks.push(links[i].link);
+                }
             }
         }
-        return allNews;
+        return { news: allNews, links: usedLinks };
     } catch (e) {
         if (retry < 3) {
             return await getNews(links, retry + 1);
         }
-        return allNews;
+        return { news: allNews, links: usedLinks };
     }
 }
 
@@ -108,16 +120,19 @@ async function searchNews(symbol, browser, retry = 0) {
     }
 }
 
-async function main() {
-    const browser = await puppeteer.launch({ headless: false });
-    let symbols = 'IEX';
-    let links = await searchNews(symbols, browser);
-    let news = await getNews(links);
-    fs.writeFile(`${symbols}.txt`, news, function (err) {
+async function main(symbol, headless) {
+    const browser = await puppeteer.launch({ headless: headless });
+    let links = await searchNews(symbol, browser);
+    let news = await getNews(links, headless);
+    fs.writeFile(`${symbol}.txt`, news.news, function (err) {
         if (err) throw err;
         console.log('All news saved to file!');
     });
+    
     await browser.close();
+    return 'done';
 }
 
-main();
+exports.main = async function (symbol, headless) {
+    return await main(symbol, headless);
+}

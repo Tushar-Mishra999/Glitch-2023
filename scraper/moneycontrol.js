@@ -1,9 +1,9 @@
 const utils = require('./common.js');
 const puppeteer = require('puppeteer');
 
-async function moneycontrol (link, retry = 0) {
+async function moneycontrol (link, headless, retry = 0) {
     try {
-    const browser = await puppeteer.launch({ headless: false, timeout: 120000 });
+    const browser = await puppeteer.launch({ headless: headless, timeout: 120000 });
     page=await browser.newPage();
     page.setUserAgent(utils.getUserAgent());
     await page.goto(link, { waitUntil: 'networkidle2' });
@@ -28,6 +28,6 @@ async function moneycontrol (link, retry = 0) {
     }
 }
 
-exports.moneycontrol = async function(link) {
-    return await moneycontrol(link);
+exports.moneycontrol = async function(link, headless) {
+    return await moneycontrol(link, headless);
 }

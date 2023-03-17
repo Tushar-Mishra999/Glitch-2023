@@ -5,6 +5,7 @@ import re
 import time
 import uuid
 import requests as rq
+from time import sleep
 from datetime import datetime, timedelta
 
 import boto3
@@ -56,20 +57,38 @@ def signup():
 @app.get('/topmovers')
 @cross_origin()
 def topmovers():
-    data=rq.get("https://www.nseindia.com/api/equity-stockIndices?index=NIFTY%20100",headers={'User-Agent': rq.get('http://localhost:5000/ua').text}).text
-    data=json.loads(data)
-    data=data['data']
-    
-    
+    try:
+        data = rq.get('http://localhost:3000/stocks')
+    except:
+        pass
+    sleep(5)
+    with open('stocks.json') as f:
+        data = json.load(f)
+    return data
 
 @app.get('/graph')
 @cross_origin()
 def graph():
-    stock=request.args.get('stock')
-    ticker=yf.Ticker(stock+'.NS')
-    df=ticker.history(period='1y',interval='1d')
-    df=df.reset_index()
-    df=df[['Date','Close']]
-    df['Date']=df['Date'].dt.strftime('%Y-%m-%d')
-    df=df.to_dict('records')
+    stock = request.args.get('stock')
+    ticker = yf.Ticker(stock+'.NS')
+    df = ticker.history(period='1y', interval='1d')
+    df = df.reset_index()
+    df = df[['Date', 'Close']]
+    df['Date'] = df['Date'].dt.strftime('%Y-%m-%d')
+    df = df.to_dict('records')
     return jsonify(df)
+
+
+@app.get('/search')
+@cross_origin()
+def search():
+    query = request.args.get('query')
+    query = query.upper()
+    df=pd.read_csv('stocks.csv')
+    results = df.query("symbol.str.contains(@query) or name.str.contains(@query)")
+    results = results.to_dict('records')
+    return jsonify(results)
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0')
