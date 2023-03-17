@@ -88,7 +88,9 @@ def info():
     for key in python_dict:
         if isinstance(python_dict[key], dict):
             python_dict[key] = list(python_dict[key].values())[0]
-    response = [python_dict]+df
+    response = python_dict
+    response ['price'] = df
+    
     return jsonify(response)
 
 

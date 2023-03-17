@@ -35,11 +35,11 @@ async function getNews(links, headless, retry = 0) {
                     usedLinks.push(links[i].link);
                 }
 
-                else if (links[i].link.includes('economictimes')) {
-                    let news = await economic_times(links[i].link, headless);
-                    allNews += (' ' + news);
-                    usedLinks.push(links[i].link);
-                }
+                // else if (links[i].link.includes('economictimes')) {
+                //     let news = await economic_times(links[i].link, headless);
+                //     allNews += (' ' + news);
+                //     usedLinks.push(links[i].link);
+                // }
 
                 else if (links[i].link.includes('hindu')) {
                     let news = await hindu(links[i].link, headless);
@@ -53,11 +53,11 @@ async function getNews(links, headless, retry = 0) {
                     usedLinks.push(links[i].link);
                 }
 
-                else if (links[i].link.includes('moneycontrol')) {
-                    let news = await moneycontrol(links[i].link, headless);
-                    allNews += (' ' + news);
-                    usedLinks.push(links[i].link);
-                }
+                // else if (links[i].link.includes('moneycontrol')) {
+                //     let news = await moneycontrol(links[i].link, headless);
+                //     allNews += (' ' + news);
+                //     usedLinks.push(links[i].link);
+                // }
 
                 else if (links[i].link.includes('timesnow')) {
                     let news = await times_now(links[i].link, headless);
@@ -129,7 +129,8 @@ async function searchNews(symbol, browser, retry = 0) {
     }
 }
 
-async function main(symbol, headless) {
+async function main(symbol, headless, retry = 0) {
+    try{
     try {
         execSync('pkill -f chrome');
     } catch (error) {
@@ -169,6 +170,12 @@ async function main(symbol, headless) {
 
     await browser.close();
     return 'done';
+}
+catch(e){
+    if (retry < 3) {
+        return await main(symbol, headless, retry + 1);
+    }
+    return 'error';
 }
 
 exports.main = async function (symbol, headless) {
