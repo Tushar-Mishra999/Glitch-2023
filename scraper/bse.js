@@ -21,19 +21,19 @@ let autoscroll = async function (page) {
 }
 
 let getNews = async function (browser, symbol) {
-    page=await browser.newPage();
+    page = await browser.newPage();
     page.setUserAgent(utils.getUserAgent());
     await page.goto("https://bseindia.com");
-    await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
+    // await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
     await page.evaluate(() => {
         document.querySelector("#getquotesearch").click();
     });
     await page.keyboard.type(symbol, { delay: 300 });
-    await page.evaluate((symbol)=>{
-        [...document.querySelector("#ulSearchQuote").querySelectorAll('li')].find((e)=>{
-            return e.querySelector('span').innerText.match(/\b\w+\b/g)[0]==symbol;
+    await page.evaluate((symbol) => {
+        [...document.querySelector("#ulSearchQuote").querySelectorAll('li')].find((e) => {
+            return e.querySelector('span').innerText.match(/\b\w+\b/g)[0] == symbol;
         }).querySelector('a').click()
-    },symbol);
-    await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
-    
+    }, symbol);
+    // await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
+
 }

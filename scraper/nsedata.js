@@ -16,7 +16,7 @@ const stocks=async function (retry = 0) {
         if (retry == 5){
             let page=await browser.newPage();
             await page.goto("https://nseindia.com", { waitUntil: 'domcontentloaded' });
-            // await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
+            // // await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
             await utils.autoscroll(page);
             return stocks(++retry);
         }

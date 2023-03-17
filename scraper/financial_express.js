@@ -1,27 +1,27 @@
 const utils = require('./common.js');
 const puppeteer = require('puppeteer');
 
-async function live_mint(link, retry = 0) {
-    try {
-    let browser = await puppeteer.launch({ headless: false, timeout: 120000 });
-    let page = await browser.newPage();
+async function financial_express (link, retry = 0) {
+    try{
+    const browser = await puppeteer.launch({ headless: false, timeout: 120000 });
+    page = await browser.newPage();
     page.setUserAgent(utils.getUserAgent());
     await page.goto(link, { waitUntil: 'networkidle2' });
     // await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
     await utils.autoscroll(page);
     let news;
     news = await page.evaluate(() => {
-        return [...document.querySelector("#mainArea").querySelectorAll('p')].map(e => e.innerText).join(' ')
+        return document.querySelector('#pcl-full-content').innerText;
     });
     return news;
     } catch (e) {
         if (retry < 3) {
-            return await live_mint(link, retry + 1);
+            return await financial_express(link, retry + 1);
         }
         return null;
     }
 }
 
-exports.live_mint = async function (link) {
-    return await live_mint(link);
+exports.financial_express = async function(link) {
+    return await financial_express(link);
 }

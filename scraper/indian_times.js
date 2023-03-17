@@ -1,40 +1,27 @@
 const utils = require('./common.js');
+const puppeteer = require('puppeteer');
 
-let autoscroll = async function (page) {
-    console.log('Scrolling page!');
-    await page.evaluate(async () => {
-        await new Promise((resolve, reject) => {
-            var totalHeight = 0;
-            var distance = 100;
-            var timer = setInterval(() => {
-                var scrollHeight = document.body.scrollHeight;
-                window.scrollBy(0, distance);
-                totalHeight += distance;
-
-                if (totalHeight >= scrollHeight) {
-                    clearInterval(timer);
-                    resolve();
-                }
-            }, 150);
-        });
-    });
-}
-
-let indian_times = async function (browser, link) {
-    page=await browser.newPage();
+async function indian_times(link, retry = 0) {
+    try {
+    const browser = await puppeteer.launch({ headless: false, timeout: 120000 });
+    page = await browser.newPage();
     page.setUserAgent(utils.getUserAgent());
     await page.goto(link, { waitUntil: 'networkidle2' });
-    await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
-    autoscroll(page);
+    // await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
+    await utils.autoscroll(page);
     let news;
-    await page.evaluate(() => {
-        if(document.querySelector('#readmorearticle')){
-            document.querySelector('#readmorearticle').click();
-        }
-    });
-    autoscroll(page);
-    news=await page.evaluate(() => {
-        return [...document.querySelector("#contentdata").querySelectorAll('p')].map(e=>e.innerText).join(' ').trim();
+    news = await page.evaluate(() => {
+        return document.querySelector('div[data-articlebody]').innerText.split('READ NEXT')[0];
     });
     return news;
+    } catch (e) {
+        if (retry < 3) {
+            return await indian_times(link, retry + 1);
+        }
+        return null;
+    }
+}
+
+exports.indian_times = async function (link) {
+    return await indian_times(link);
 }

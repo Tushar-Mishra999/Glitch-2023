@@ -1,10 +1,13 @@
 const utils = require('./common.js');
+const puppeteer = require('puppeteer');
 
-let moneycontrol = async function (browser, link) {
+async function moneycontrol (link, retry = 0) {
+    try {
+    const browser = await puppeteer.launch({ headless: false, timeout: 120000 });
     page=await browser.newPage();
     page.setUserAgent(utils.getUserAgent());
     await page.goto(link, { waitUntil: 'networkidle2' });
-    await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
+    // await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
     await utils.autoscroll(page);
     let news;
     await page.evaluate(() => {
@@ -12,9 +15,19 @@ let moneycontrol = async function (browser, link) {
             document.querySelector('#readmorearticle').click();
         }
     });
-    autoscroll(page);
+    await utils.autoscroll(page);
     news=await page.evaluate(() => {
         return [...document.querySelector("#contentdata").querySelectorAll('p')].map(e=>e.innerText).join(' ').trim();
     });
     return news;
+    } catch (e) {
+        if (retry < 3) {
+            return await moneycontrol(link, retry + 1);
+        }
+        return null;
+    }
+}
+
+exports.moneycontrol = async function(link) {
+    return await moneycontrol(link);
 }
