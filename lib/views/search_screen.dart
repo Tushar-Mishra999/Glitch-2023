@@ -18,15 +18,19 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   List<Nifty> niftyList = [];
-  bool isLoaded = true;
+  bool isLoaded1 = false;
+  bool isLoaded2 = true;
   void fetchNifty() async {
     SearchService searchService = SearchService();
     niftyList = await searchService.getNifty();
-    isLoaded = false;
+    isLoaded1 = false;
     setState(() {});
   }
 
   void fetchCompany(String name, BuildContext context) async {
+    isLoaded2 = true;
+    setState(() {
+    });
     SearchService searchService = SearchService();
     Company company = await searchService.searchCompany(companyName: name);
     Navigator.push(
@@ -35,6 +39,10 @@ class _SearchScreenState extends State<SearchScreen> {
             builder: (context) => InfoScreen(
                   company: company,
                 )));
+    
+    isLoaded2 = false;
+    setState(() {
+    });
   }
 
   @override
@@ -49,83 +57,88 @@ class _SearchScreenState extends State<SearchScreen> {
     return Scaffold(
       backgroundColor: kBgColor,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Center(
-            child: Column(children: [
-              SizedBox(
-                height: size.height * 0.1,
-              ),
-              Image.asset(
-                "assets/money.png",
-                width: size.width * 0.5,
-              ),
-              SizedBox(
-                height: size.height * 0.07,
-              ),
-              RoundedSearchBar(
-                hintText: 'Search for your company',
-                onSubmitted: (value) {
-                  fetchCompany(value, context);
-                },
-              ),
-              SizedBox(
-                height: size.height * 0.03,
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.only(left: 30.0, right: 30, top: 15, bottom: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Top Gainers',
-                      style: GoogleFonts.sourceSansPro(
-                          color: Colors.grey.shade100,
-                          fontSize: 22,
-                          fontWeight: FontWeight.w700),
-                    ),
-                    Text(
-                      "\$50",
-                      style: GoogleFonts.sourceSansPro(
-                          color: Colors.transparent,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w900),
-                    )
-                  ],
+        child: Stack(
+          children:[ SingleChildScrollView(
+            child: Center(
+              child: Column(children: [
+                SizedBox(
+                  height: size.height * 0.1,
                 ),
-              ),
-              isLoaded
-                  ? const CircularProgressIndicator(color: color1)
-                  : ListView.builder(
-                      shrinkWrap: true,
-                      itemCount:
-                          niftyList.length, // the number of items in the list
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.only(
-                              left: 30.0, right: 30, top: 15, bottom: 15),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                niftyList[index].name,
-                                style: GoogleFonts.sourceSansPro(
-                                    color: Colors.grey.shade400, fontSize: 20),
-                              ),
-                              Text(
-                                niftyList[index].price,
-                                style: GoogleFonts.sourceSansPro(
-                                    color: Colors.green.shade500,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w900),
-                              )
-                            ],
-                          ),
-                        );
-                      },
-                    )
-            ]),
+                Image.asset(
+                  "assets/money.png",
+                  width: size.width * 0.5,
+                ),
+                SizedBox(
+                  height: size.height * 0.07,
+                ),
+                RoundedSearchBar(
+                  hintText: 'Search for your company',
+                  onSubmitted: (value) {
+                    fetchCompany(value, context);
+                  },
+                ),
+                SizedBox(
+                  height: size.height * 0.03,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 30.0, right: 30, top: 15, bottom: 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Top Gainers',
+                        style: GoogleFonts.sourceSansPro(
+                            color: Colors.grey.shade100,
+                            fontSize: 22,
+                            fontWeight: FontWeight.w700),
+                      ),
+                      Text(
+                        "\$50",
+                        style: GoogleFonts.sourceSansPro(
+                            color: Colors.transparent,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w900),
+                      )
+                    ],
+                  ),
+                ),
+                isLoaded1
+                    ? const CircularProgressIndicator(color: color1)
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        itemCount:
+                            niftyList.length, // the number of items in the list
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.only(
+                                left: 30.0, right: 30, top: 15, bottom: 15),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  niftyList[index].name,
+                                  style: GoogleFonts.sourceSansPro(
+                                      color: Colors.grey.shade400, fontSize: 20),
+                                ),
+                                Text(
+                                  niftyList[index].price,
+                                  style: GoogleFonts.sourceSansPro(
+                                      color: Colors.green.shade500,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w900),
+                                )
+                              ],
+                            ),
+                          );
+                        },
+                      )
+              ]),
+            ),
           ),
+          isLoaded2
+                    ? Center(child: const CircularProgressIndicator(color: color1)):Container()
+          ]
         ),
       ),
     );
