@@ -77,20 +77,21 @@ def info():
     ticker = yf.Ticker(stock+'.NS')
     df = ticker.history(period='7d', interval='1d')
     df = df.reset_index()
-    df = df[['Date', 'Close']]
-    df = df.to_dict('records')
+    df = list(df['Close'])
     response = dynamo.scan(
         TableName='stocks',
         FilterExpression="contains(symbol, :search_value)",
         ExpressionAttributeValues={":search_value": {"S": stock}}
     )
-    python_dict = response['Items'][0]
-    for key in python_dict:
-        if isinstance(python_dict[key], dict):
-            python_dict[key] = list(python_dict[key].values())[0]
-    response = python_dict
-    response ['price'] = df
-    
+    dynamo_response = response['Items'][0]
+    response = {
+        'reports': [link['S'] for link in dynamo_response['links']['L']],
+        'score': float(dynamo_response['score']['N']),
+        'symbol': dynamo_response['symbol']['S']
+    }
+
+    response['prices'] = df
+
     return jsonify(response)
 
 
