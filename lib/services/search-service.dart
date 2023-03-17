@@ -15,32 +15,29 @@ class SearchService {
           'Content-Type': 'application/json; charset=UTF-8',
         },
       );
-
       var response = jsonDecode(res.body);
       Company company = Company.fromMap(response);
       return company;
-    } catch (e) {
-      
-    }
+    } catch (e) {}
   }
 
   Future<List<Nifty>> getNifty() async {
     http.Response res = await http.get(
       Uri.parse(
-          'https://www.nseindia.com/api/equity-stockIndices?index=NIFTY%20100'),
+          '$uri/topmovers'),
       // headers: <String, String>{
       //   'Content-Type': 'application/json; charset=UTF-8',
       // },
     );
 
-    var response = jsonDecode(res.body)['data'];
+    var response = jsonDecode(res.body);
     print(response);
     List<Nifty> niftyList = [];
 
-    // for (var i = 1; i < 6; i++) {
-    //   Nifty temp = Nifty.fromMap(response[i]);
-    //   niftyList.add(temp);
-    // }
+    for (var i = 0; i < response.length; i++) {
+      Nifty temp = Nifty.fromMap(response[i]);
+      niftyList.add(temp);
+    }
 
     return niftyList;
   }

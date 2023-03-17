@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:glitch_stock_market/views/onboarding_screen.dart';
+import 'package:glitch_stock_market/views/search_screen.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
