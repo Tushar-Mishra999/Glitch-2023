@@ -4,7 +4,7 @@ class Company {
   final String name;
   final String price;
   final double sentimentScore;
-  final List<Map<String, String>> reports;
+  final List<String> reports;
   final List<double> prices;
 
   Company(
