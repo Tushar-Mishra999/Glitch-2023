@@ -1,9 +1,9 @@
 const utils = require('./common.js');
 const puppeteer = require('puppeteer');
 
-async function hindu (link, retry = 0) {
+async function hindu (link, headless, retry = 0) {
     try {
-    const browser = await puppeteer.launch({ headless: false, timeout: 120000 });
+    const browser = await puppeteer.launch({ headless: headless, timeout: 120000 });
     page=await browser.newPage();
     page.setUserAgent(utils.getUserAgent());
     await page.goto(link, { waitUntil: 'networkidle2' });
@@ -22,6 +22,6 @@ async function hindu (link, retry = 0) {
     }
 }
 
-exports.hindu = async function(link) {
-    return await hindu(link);
+exports.hindu = async function(link, headless) {
+    return await hindu(link, headless);
 }
