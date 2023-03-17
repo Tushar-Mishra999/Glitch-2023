@@ -6,13 +6,14 @@ class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
   final int maxLines;
-
+  final bool obscure;
   final String title;
   const CustomTextField({
     Key? key,
     required this.controller,
     required this.hintText,
     required this.title,
+    this.obscure=false,
     this.maxLines = 1,
   }) : super(key: key);
 
@@ -42,6 +43,7 @@ class CustomTextField extends StatelessWidget {
                 border: Border.all(color: color1, width: 2)),
             child: TextFormField(
               controller: controller,
+              obscureText: obscure,
               style: GoogleFonts.sourceSansPro(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,

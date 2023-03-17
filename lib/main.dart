@@ -1,9 +1,13 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:glitch_stock_market/views/email_verification.dart';
 import 'package:glitch_stock_market/views/info_screen.dart';
 import 'package:glitch_stock_market/views/onboarding_screen.dart';
 import 'package:glitch_stock_market/views/search_screen.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -19,7 +23,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: SearchScreen(),
+      home: HomeScreen(),
     );
   }
 }

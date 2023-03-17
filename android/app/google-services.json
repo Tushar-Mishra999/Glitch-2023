@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "854638201271",
+    "project_id": "stockpulse-74454",
+    "storage_bucket": "stockpulse-74454.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:854638201271:android:2407a8ba1c67253ab6c032",
+        "android_client_info": {
+          "package_name": "com.example.glitch_stock_market"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "854638201271-mld0nl9jariaqi4cvsisaj7mhe9ql936.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6TJAfDHMO-yEXet9wLuzm0-DCs-C7WtU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "854638201271-mld0nl9jariaqi4cvsisaj7mhe9ql936.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -26,15 +26,15 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: kBgColor,
-      body: Form(
-        key: _formKey,
-        child: Center(
-          child: SingleChildScrollView(
-            child: Stack(
-              children: [Column(
+      body: Stack(children: [
+        Center(
+          child: Form(
+            key: _formKey,
+            child: Center(
+              child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SizedBox(
                       height: size.height * 0.05,
@@ -46,6 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     CustomTextField(
                       title: "Password",
+                      obscure: true,
                       controller: passwordController,
                       hintText: "Enter your password",
                     ),
@@ -55,18 +56,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     RoundedButton(
                       size: size,
                       title: 'Login',
-                      func: () {
+                      func: () async {
                         isLoaded = true;
-                        setState(() {
-                        });
+                        setState(() {});
                         AuthService authService = AuthService();
-                        authService.signInUser(
+                        await authService.signInUser(
                             context: context,
                             email: emailController.text,
                             password: passwordController.text);
                         isLoaded = false;
-                        setState(() {
-                        });
+                        setState(() {});
                       },
                       second: false,
                     ),
@@ -105,14 +104,17 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ]),
-                  isLoaded?const CircularProgressIndicator(
-                      color: color1,
-                    ):Container()
-                  ],
             ),
           ),
         ),
-      ),
+        isLoaded
+            ? const Center(
+                child: CircularProgressIndicator(
+                  color: color1,
+                ),
+              )
+            : Container()
+      ]),
     );
   }
 }
