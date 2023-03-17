@@ -84,7 +84,11 @@ def info():
         FilterExpression="contains(symbol, :search_value)",
         ExpressionAttributeValues={":search_value": {"S": stock}}
     )
-    response = response['Items']+df
+    python_dict = response['Items'][0]
+    for key in python_dict:
+        if isinstance(python_dict[key], dict):
+            python_dict[key] = list(python_dict[key].values())[0]
+    response = [python_dict]+df
     return jsonify(response)
 
 
