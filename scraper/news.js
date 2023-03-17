@@ -168,6 +168,28 @@ async function main(symbol, headless, retry = 0) {
             }
         });
 
+        const docClient = new AWS.DynamoDB.DocumentClient();
+        const tableName = 'stocks';
+        const params = {
+            TableName: tableName,
+            Key: {
+                'symbol': symbol,
+            },
+            UpdateExpression: 'SET links = :val',
+            ExpressionAttributeValues: {
+                ':val': news.links,
+            },
+            ReturnValues: 'UPDATED_NEW',
+        };
+        docClient.update(params, function (err, data) {
+            if (err) {
+                console.error('Error updating item:', err);
+            } else {
+                console.log('Item updated:', data);
+            }
+        });
+
+
         await browser.close();
         return 'done';
     }

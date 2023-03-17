@@ -16,7 +16,7 @@ nifty100 = ns.get_nifty100()
 
 for i in nifty100:
     response = ec2.run_instances(ImageId='ami-08338e340ebe63a3a', InstanceType='t2.small',
-                                 SecurityGroupIds=['sg-095d8a760e84cabab'], SubnetId='subnet-b6daa3fa')
+                                 SecurityGroupIds=['sg-095d8a760e84cabab'], SubnetId='subnet-b6daa3fa',KeyName='glitch', MinCount=1, MaxCount=1)
     instance_id = response['Instances'][0]['InstanceId']
     ec2_instance = ec2.Instance(instance_id)
     ec2_instance.wait_until_running()
@@ -25,4 +25,4 @@ for i in nifty100:
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     ssh.connect(ip_address, username='ubuntu', key_filename='glitch.pem')
     stdin, stdout, stderr = ssh.exec_command('cd Glitch-2023&&git pull')
-    
+    rq.post('http://localhost:5000/news', json={'symbol': i, 'headless': True})
