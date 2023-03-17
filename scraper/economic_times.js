@@ -7,8 +7,6 @@ async function economic_times(link, headless, retry = 0) {
     page = await browser.newPage();
     page.setUserAgent(utils.getUserAgent());
     await page.goto(link, { waitUntil: 'networkidle2' });
-    // await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
-    // await utils.autoscroll(page);
     let news;
     news = await page.evaluate(() => {
         return document.querySelector('[class^="artText"]')?.innerText;

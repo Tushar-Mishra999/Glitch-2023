@@ -36,6 +36,9 @@ s3 = boto3.Session(profile_name="assemblage",
 cognito = boto3.Session(profile_name="assemblage",
                         region_name="ap-south-1").client("cognito-idp")
 
+dynamo = boto3.Session(profile_name="assemblage",
+                       region_name="ap-south-1").resource("dynamodb")
+
 
 @app.get('/')
 @cross_origin()
@@ -66,16 +69,23 @@ def topmovers():
         data = json.load(f)
     return data
 
-@app.get('/graph')
+
+@app.get('/info')
 @cross_origin()
 def graph():
     stock = request.args.get('stock')
     ticker = yf.Ticker(stock+'.NS')
-    df = ticker.history(period='1y', interval='1d')
+    df = ticker.history(period='1w', interval='1d')
     df = df.reset_index()
     df = df[['Date', 'Close']]
     df['Date'] = df['Date'].dt.strftime('%Y-%m-%d')
     df = df.to_dict('records')
+    response = dynamo.scan(
+        TableName='stocks',
+        FilterExpression="contains(symbol, :search_value)",
+        ExpressionAttributeValues={":search_value": {"S": stock}}
+    )
+    
     return jsonify(df)
 
 
@@ -84,8 +94,9 @@ def graph():
 def search():
     query = request.args.get('query')
     query = query.upper()
-    df=pd.read_csv('stocks.csv')
-    results = df.query("symbol.str.contains(@query) or name.str.contains(@query)")
+    df = pd.read_csv('stocks.csv')
+    results = df.query(
+        "symbol.str.contains(@query) or name.str.contains(@query)")
     results = results.to_dict('records')
     return jsonify(results)
 

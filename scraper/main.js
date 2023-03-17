@@ -5,6 +5,7 @@ const news = require("./news.js");
 const utils = require("./common.js");
 const stocks=require("./nsedata.js");
 
+
 const app = express();
 
 app.use(bodyParser.urlencoded({
