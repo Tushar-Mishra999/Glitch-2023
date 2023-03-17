@@ -1,16 +1,9 @@
-# glitch_stock_market
 
-A new Flutter project.
+# Description
+The mobile app is designed to provide users with valuable insights into a company's performance by analyzing news articles and reports related to the company. The app takes input from the user in the form of the company name and uses web scraping and crawling techniques to gather relevant data from various sources.
 
-## Getting Started
+The application will use natural language processing (NLP) techniques and machine learning algorithms to analyze news articles related to the company. It will identify the key topics discussed in the news articles and determine the sentiment associated with each topic. The application will then aggregate the sentiment scores to provide an overall sentiment analysis of the news articles.
 
-This project is a starting point for a Flutter application.
+The app provides users with a user-friendly interface that allows them to input the company name and receive an analysis of the latest news and reports related to the company. The user can also see which are the relevant news articles and may read it if they want to do so.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+This project provides a valuable tool for investors and traders who want to stay informed about the latest news related to a company and make informed decisions based on sentiment analysis. The app's machine learning model makes it easy for users to get a quick snapshot of a company's performance, saving them time and effort in analyzing large amounts of data.
