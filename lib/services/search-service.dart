@@ -18,7 +18,9 @@ class SearchService {
       var response = jsonDecode(res.body);
       Company company = Company.fromMap(response);
       return company;
-    } catch (e) {}
+    } catch (e) {
+      
+    }
   }
 
   Future<List<Nifty>> getNifty() async {

@@ -209,13 +209,14 @@ class _InfoScreenState extends State<InfoScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        widget.company.reports[index]['name']!,
+                        Uri.parse(widget.company.reports[index]).host.split('.')[1]
+                        ,
                         style: GoogleFonts.sourceSansPro(
                             color: Colors.grey.shade400, fontSize: 20),
                       ),
                       GestureDetector(
                         onTap: ()async{
-                          var url = widget.company.reports[index]['link'];
+                          var url = widget.company.reports[index];
                           if (await canLaunchUrl(Uri.parse(uri))) {
                             await launchUrl(Uri.parse(uri));
                           } else {
