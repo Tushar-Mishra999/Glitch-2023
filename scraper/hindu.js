@@ -13,6 +13,7 @@ async function hindu (link, headless, retry = 0) {
     news=await page.evaluate(() => {
         return document.querySelector('[itemprop="articleBody"]').innerText.trim();
     });
+    await browser.close()
     return news;
     } catch (e) {
         if (retry < 3) {

@@ -13,6 +13,7 @@ async function times_now(link, headless, retry = 0) {
     news = await page.evaluate(() => {
         return [...document.querySelector("#progressBarContainer_0").querySelectorAll('._18840')].map(e => e.innerText).join(' ').trim();
     });
+    await browser.close()
     return news;
     } catch (e) {
         if (retry < 3) {

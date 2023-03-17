@@ -13,6 +13,7 @@ async function financial_express (link, headless, retry = 0) {
     news = await page.evaluate(() => {
         return document.querySelector('#pcl-full-content').innerText;
     });
+    await browser.close()
     return news;
     } catch (e) {
         if (retry < 3) {

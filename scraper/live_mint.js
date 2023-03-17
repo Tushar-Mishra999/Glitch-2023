@@ -13,6 +13,7 @@ async function live_mint(link, headless, retry = 0) {
     news = await page.evaluate(() => {
         return [...document.querySelector("#mainArea").querySelectorAll('p')].map(e => e.innerText).join(' ')
     });
+    await browser.close()
     return news;
     } catch (e) {
         if (retry < 3) {

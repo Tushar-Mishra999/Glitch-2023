@@ -13,6 +13,7 @@ async function business_standard (link, headless, retry = 0) {
         news=await page.evaluate(() => {
             return [...document.querySelector('.p-content').querySelectorAll('p')].map(e=>e.innerText).join(' ').trim();
         });
+        await browser.close()
         return news;
     } catch (e) {
         if (retry < 3) {

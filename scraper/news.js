@@ -174,3 +174,5 @@ async function main(symbol, headless) {
 exports.main = async function (symbol, headless) {
     return await main(symbol, headless);
 }
+
+main('TCS', false);
