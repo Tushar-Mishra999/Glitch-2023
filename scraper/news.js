@@ -130,56 +130,55 @@ async function searchNews(symbol, browser, retry = 0) {
 }
 
 async function main(symbol, headless, retry = 0) {
-    try{
     try {
-        execSync('pkill -f chrome');
-    } catch (error) {
-        console.log('Error while closing Chrome instances:', error.message);
-    }
-    const browser = await puppeteer.launch({ headless: headless });
-    let links = await searchNews(symbol, browser);
-    let news = await getNews(links, headless);
-    const symbol_date = `${symbol}_${new Date().toISOString().split('T')[0]}`;
-    fs.writeFile(`${symbol_date}.txt`, news.news, function (err) {
-        if (err) throw err;
-        console.log('All news saved to file!');
-    });
-    const s3 = new AWS.S3();
-    const keyName = `${symbol_date}.txt`;
-    const filepath = `./${symbol_date}.txt`;
-    const bucketName = 'glitch23stocks';
-    fs.readFile(filepath, (err, data) => {
-        if (err) {
-            console.error('Error reading file:', err);
-        } else {
-            const params = {
-                Bucket: bucketName,
-                Key: keyName,
-                Body: data,
-            };
-
-            s3.upload(params, (err, data) => {
-                if (err) {
-                    console.error('Error uploading file:', err);
-                } else {
-                    console.log('File uploaded:', data.Location);
-                }
-            });
+        try {
+            execSync('pkill -f chrome');
+        } catch (error) {
+            console.log('Error while closing Chrome instances:', error.message);
         }
-    });
+        const browser = await puppeteer.launch({ headless: headless });
+        let links = await searchNews(symbol, browser);
+        let news = await getNews(links, headless);
+        const symbol_date = `${symbol}_${new Date().toISOString().split('T')[0]}`;
+        fs.writeFile(`${symbol_date}.txt`, news.news, function (err) {
+            if (err) throw err;
+            console.log('All news saved to file!');
+        });
+        const s3 = new AWS.S3();
+        const keyName = `${symbol_date}.txt`;
+        const filepath = `./${symbol_date}.txt`;
+        const bucketName = 'glitch23stocks';
+        fs.readFile(filepath, (err, data) => {
+            if (err) {
+                console.error('Error reading file:', err);
+            } else {
+                const params = {
+                    Bucket: bucketName,
+                    Key: keyName,
+                    Body: data,
+                };
 
-    await browser.close();
-    return 'done';
-}
-catch(e){
-    if (retry < 3) {
-        return await main(symbol, headless, retry + 1);
+                s3.upload(params, (err, data) => {
+                    if (err) {
+                        console.error('Error uploading file:', err);
+                    } else {
+                        console.log('File uploaded:', data.Location);
+                    }
+                });
+            }
+        });
+
+        await browser.close();
+        return 'done';
     }
-    return 'error';
+    catch (e) {
+        if (retry < 3) {
+            return await main(symbol, headless, retry + 1);
+        }
+        return 'error';
+    }
 }
 
 exports.main = async function (symbol, headless) {
     return await main(symbol, headless);
 }
-
-main('TCS', false);
