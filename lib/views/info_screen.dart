@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:glitch_stock_market/constants.dart';
 import 'package:glitch_stock_market/services/search-service.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../models/company.dart';
 
@@ -103,11 +104,25 @@ class _InfoScreenState extends State<InfoScreen> {
                         color: Colors.grey.shade400,
                         fontWeight: FontWeight.w700),
                   ),
+                  widget.company.sentimentScore>0?
                   Text(
-                    widget.company.sentiment,
+                    "Positive",
                     style: GoogleFonts.sourceSansPro(
                         fontSize: 22,
                         color: Colors.green.shade400,
+                        fontWeight: FontWeight.w700),
+                  ):widget.company.sentimentScore==0?Text(
+                    "Neutral",
+                    style: GoogleFonts.sourceSansPro(
+                        fontSize: 22,
+                        color: Colors.grey.shade400,
+                        fontWeight: FontWeight.w700),
+                  ):
+                  Text(
+                    "Negative",
+                    style: GoogleFonts.sourceSansPro(
+                        fontSize: 22,
+                        color: Colors.red.shade400,
                         fontWeight: FontWeight.w700),
                   ),
                   Icon(
@@ -150,7 +165,7 @@ class _InfoScreenState extends State<InfoScreen> {
                         fontWeight: FontWeight.w700),
                   ),
                   Text(
-                    widget.company.priceBand,
+                    {widget.company.sentimentScore*100}.toString(),
                     style: GoogleFonts.sourceSansPro(
                         color: Colors.green.shade400,
                         fontSize: 20,
@@ -198,10 +213,20 @@ class _InfoScreenState extends State<InfoScreen> {
                         style: GoogleFonts.sourceSansPro(
                             color: Colors.grey.shade400, fontSize: 20),
                       ),
-                      const Icon(
-                        Icons.open_in_browser,
-                        color: Colors.blue,
-                        size: 30,
+                      GestureDetector(
+                        onTap: ()async{
+                          var url = widget.company.reports[index]['link'];
+                          if (await canLaunchUrl(Uri.parse(uri))) {
+                            await launchUrl(Uri.parse(uri));
+                          } else {
+                            throw 'Could not launch $url';
+                          }   
+                        },
+                        child: const Icon(
+                          Icons.open_in_browser,
+                          color: Colors.blue,
+                          size: 30,
+                        ),
                       )
                     ],
                   ),

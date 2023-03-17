@@ -12,8 +12,8 @@ class Nifty {
 
   factory Nifty.fromMap(Map<String, dynamic> map) {
     return Nifty(
-        name: map['symbol'] ?? '',
-        price: map['lastPrice'] ?? '',);
+        name: map['meta']['symbol'] ?? '',
+        price: map['lastPrice'].toString() ?? '',);
   }
 
   String toJson() => json.encode(toMap());

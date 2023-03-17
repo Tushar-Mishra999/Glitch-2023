@@ -18,8 +18,8 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   List<Nifty> niftyList = [];
-  bool isLoaded1 = false;
-  bool isLoaded2 = true;
+  bool isLoaded1 = true;
+  bool isLoaded2 = false;
   void fetchNifty() async {
     SearchService searchService = SearchService();
     niftyList = await searchService.getNifty();
@@ -48,7 +48,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void initState() {
     super.initState();
-    // fetchNifty();
+    fetchNifty();
   }
 
   @override
@@ -122,7 +122,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                       color: Colors.grey.shade400, fontSize: 20),
                                 ),
                                 Text(
-                                  niftyList[index].price,
+                                  "\u{20B9}${niftyList[index].price}",
                                   style: GoogleFonts.sourceSansPro(
                                       color: Colors.green.shade500,
                                       fontSize: 20,
