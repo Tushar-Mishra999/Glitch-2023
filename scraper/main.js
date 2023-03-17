@@ -16,6 +16,7 @@ app.use(bodyParser.urlencoded({
 app.use(express.json());
 
 app.post('/news', async (req, res) => {
+    console.log('news')
     try {
         let headless = Boolean(eval(req.body.headless));
         let symbol = req.body.symbol;
