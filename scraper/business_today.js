@@ -13,6 +13,7 @@ async function business_today (link, headless, retry = 0) {
     news = await page.evaluate(() => {
         return document.querySelector('.story-with-main-sec').innerText.split('Published')[0].trim();
     });
+    await browser.close()
     return news;
     } catch (e) {
         if (retry < 3) {

@@ -37,7 +37,7 @@ cognito = boto3.Session(profile_name="assemblage",
                         region_name="ap-south-1").client("cognito-idp")
 
 dynamo = boto3.Session(profile_name="assemblage",
-                       region_name="ap-south-1").resource("dynamodb")
+                       region_name="ap-south-1").client("dynamodb")
 
 
 @app.get('/')
@@ -72,21 +72,27 @@ def topmovers():
 
 @app.get('/info')
 @cross_origin()
-def graph():
+def info():
     stock = request.args.get('stock')
     ticker = yf.Ticker(stock+'.NS')
-    df = ticker.history(period='1w', interval='1d')
+    df = ticker.history(period='7d', interval='1d')
     df = df.reset_index()
-    df = df[['Date', 'Close']]
-    df['Date'] = df['Date'].dt.strftime('%Y-%m-%d')
-    df = df.to_dict('records')
+    df = list(df['Close'])
     response = dynamo.scan(
         TableName='stocks',
         FilterExpression="contains(symbol, :search_value)",
         ExpressionAttributeValues={":search_value": {"S": stock}}
     )
-    
-    return jsonify(df)
+    dynamo_response = response['Items'][0]
+    response = {
+        'reports': [link['S'] for link in dynamo_response['links']['L']],
+        'score': float(dynamo_response['score']['N']),
+        'symbol': dynamo_response['symbol']['S']
+    }
+
+    response['prices'] = df
+
+    return jsonify(response)
 
 
 @app.get('/search')

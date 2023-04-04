@@ -13,6 +13,7 @@ async function indian_times(link, headless, retry = 0) {
     news = await page.evaluate(() => {
         return document.querySelector('div[data-articlebody]').innerText.split('READ NEXT')[0];
     });
+    await browser.close()
     return news;
     } catch (e) {
         if (retry < 3) {
