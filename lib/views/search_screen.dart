@@ -27,22 +27,27 @@ class _SearchScreenState extends State<SearchScreen> {
     setState(() {});
   }
 
-  void fetchCompany(String name, BuildContext context) async {
+  Future<void> fetchCompany(String name, BuildContext context) async {
     isLoaded2 = true;
-    setState(() {
-    });
+    setState(() {});
     SearchService searchService = SearchService();
-    Company company = await searchService.searchCompany(companyName: name);
+    //Company company = await searchService.searchCompany(companyName: name);
+    Company company = Company(
+        name: "Adani Enterprises",
+        price: "1874.00",
+        sentimentScore: 0.4,
+        reports:
+            ["https://timesofindia.indiatimes.com/business/india-business/eight-adani-group-companies-settle-with-gains-adani-enterprises-rallies-5/articleshow/98456268.cms"],
+        prices: [200, 400, 600, 800, 1000]);
     Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => InfoScreen(
                   company: company,
                 )));
-    
+
     isLoaded2 = false;
-    setState(() {
-    });
+    setState(() {});
   }
 
   @override
@@ -57,8 +62,8 @@ class _SearchScreenState extends State<SearchScreen> {
     return Scaffold(
       backgroundColor: kBgColor,
       body: SafeArea(
-        child: Stack(
-          children:[ SingleChildScrollView(
+        child: Stack(children: [
+          SingleChildScrollView(
             child: Center(
               child: Column(children: [
                 SizedBox(
@@ -73,8 +78,8 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
                 RoundedSearchBar(
                   hintText: 'Search for your company',
-                  onSubmitted: (value) {
-                    fetchCompany(value, context);
+                  onSubmitted: (value) async{
+                    await fetchCompany(value, context);
                   },
                 ),
                 SizedBox(
@@ -119,7 +124,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                 Text(
                                   niftyList[index].name,
                                   style: GoogleFonts.sourceSansPro(
-                                      color: Colors.grey.shade400, fontSize: 20),
+                                      color: Colors.grey.shade400,
+                                      fontSize: 20),
                                 ),
                                 Text(
                                   "\u{20B9}${niftyList[index].price}",
@@ -137,9 +143,9 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
           ),
           isLoaded2
-                    ? Center(child: const CircularProgressIndicator(color: color1)):Container()
-          ]
-        ),
+              ? Center(child: const CircularProgressIndicator(color: color1))
+              : Container()
+        ]),
       ),
     );
   }

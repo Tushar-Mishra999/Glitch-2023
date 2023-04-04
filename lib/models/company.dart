@@ -16,9 +16,9 @@ class Company {
 
   factory Company.fromMap(Map<String, dynamic> map) {
     return Company(
-        name: map['name'] ?? '',
-        price: map['price'] ?? '',
-        sentimentScore: map['sentiment'] ?? '',
+        name: map['symbol'] ?? '',
+        price: map['prices'][0].toString() ?? '',
+        sentimentScore: map['score'] ?? '',
         reports: map['reports'] ?? '',
         prices:map['prices']??[]);
   }

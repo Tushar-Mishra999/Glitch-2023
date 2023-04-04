@@ -1,9 +1,7 @@
 import 'package:draw_graph/draw_graph.dart';
 import 'package:draw_graph/models/feature.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:glitch_stock_market/constants.dart';
 import 'package:glitch_stock_market/services/search-service.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -20,22 +18,16 @@ class InfoScreen extends StatefulWidget {
 
 class _InfoScreenState extends State<InfoScreen> {
   //List<double> prices = [1001, 1002, 500, 400, 200, 800, 950];
-    
-  
+
   bool isLoaded = true;
-  void fetchCompany(String name) async {
-    SearchService searchService = SearchService();
-    var company = await searchService.searchCompany(companyName: name);
-    isLoaded = false;
-    setState(() {});
-  }
+  
 
   // Feature(
   @override
   Widget build(BuildContext context) {
-    List<double> prices=widget.company.prices;
+    List<double> prices = widget.company.prices;
     double maxi = -1;
-    
+
     for (int i = 0; i < prices.length; i++) {
       maxi = maxi < prices[i] ? prices[i] : maxi;
     }
@@ -62,7 +54,7 @@ class _InfoScreenState extends State<InfoScreen> {
     final List<String> labely = [];
 
     for (int i = 0; i < 5; i++) {
-      labely.add(labelYNum[i].toString());
+      labely.add(labelYNum[i].toStringAsFixed(2));
     }
 
     final size = MediaQuery.of(context).size;
@@ -90,7 +82,7 @@ class _InfoScreenState extends State<InfoScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    widget.company.price,
+                    "\u{20B9}${widget.company.price}",
                     style: GoogleFonts.sourceSansPro(
                         fontSize: 22,
                         color: Colors.grey.shade400,
@@ -104,27 +96,29 @@ class _InfoScreenState extends State<InfoScreen> {
                         color: Colors.grey.shade400,
                         fontWeight: FontWeight.w700),
                   ),
-                  widget.company.sentimentScore>0?
-                  Text(
-                    "Positive",
-                    style: GoogleFonts.sourceSansPro(
-                        fontSize: 22,
-                        color: Colors.green.shade400,
-                        fontWeight: FontWeight.w700),
-                  ):widget.company.sentimentScore==0?Text(
-                    "Neutral",
-                    style: GoogleFonts.sourceSansPro(
-                        fontSize: 22,
-                        color: Colors.grey.shade400,
-                        fontWeight: FontWeight.w700),
-                  ):
-                  Text(
-                    "Negative",
-                    style: GoogleFonts.sourceSansPro(
-                        fontSize: 22,
-                        color: Colors.red.shade400,
-                        fontWeight: FontWeight.w700),
-                  ),
+                  widget.company.sentimentScore > 0
+                      ? Text(
+                          "Positive",
+                          style: GoogleFonts.sourceSansPro(
+                              fontSize: 22,
+                              color: Colors.green.shade400,
+                              fontWeight: FontWeight.w700),
+                        )
+                      : widget.company.sentimentScore == 0
+                          ? Text(
+                              "Neutral",
+                              style: GoogleFonts.sourceSansPro(
+                                  fontSize: 22,
+                                  color: Colors.grey.shade400,
+                                  fontWeight: FontWeight.w700),
+                            )
+                          : Text(
+                              "Negative",
+                              style: GoogleFonts.sourceSansPro(
+                                  fontSize: 22,
+                                  color: Colors.red.shade400,
+                                  fontWeight: FontWeight.w700),
+                            ),
                   Icon(
                     Icons.arrow_upward_sharp,
                     color: Colors.green.shade400,
@@ -158,14 +152,14 @@ class _InfoScreenState extends State<InfoScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Price Band :',
+                    'Confidence Score :',
                     style: GoogleFonts.sourceSansPro(
                         color: Colors.grey.shade100,
                         fontSize: 22,
                         fontWeight: FontWeight.w700),
                   ),
                   Text(
-                    {widget.company.sentimentScore*100}.toString(),
+                    "${widget.company.sentimentScore * 100}%",
                     style: GoogleFonts.sourceSansPro(
                         color: Colors.green.shade400,
                         fontSize: 20,
@@ -209,19 +203,22 @@ class _InfoScreenState extends State<InfoScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        Uri.parse(widget.company.reports[index]).host.split('.')[1]
-                        ,
+                        Uri.parse(widget.company.reports[index])
+                            .host
+                            .split('.')[1],
                         style: GoogleFonts.sourceSansPro(
                             color: Colors.grey.shade400, fontSize: 20),
                       ),
                       GestureDetector(
-                        onTap: ()async{
+                        onTap: () async {
                           var url = widget.company.reports[index];
                           if (await canLaunchUrl(Uri.parse(uri))) {
                             await launchUrl(Uri.parse(uri));
                           } else {
-                            throw 'Could not launch $url';
-                          }   
+                            Fluttertoast.showToast(
+                                msg:
+                                    "Encountered some error . Please try again");
+                          }
                         },
                         child: const Icon(
                           Icons.open_in_browser,

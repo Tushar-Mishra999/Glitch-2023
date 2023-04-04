@@ -10,23 +10,21 @@ class SearchService {
   Future searchCompany({required String companyName}) async {
     try {
       http.Response res = await http.get(
-        Uri.parse('$uri?companyName=$companyName'),
+        Uri.parse('http://3.108.119.216:5000/info?stock=$companyName'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
       );
       var response = jsonDecode(res.body);
+      print(response);
       Company company = Company.fromMap(response);
       return company;
-    } catch (e) {
-      
-    }
+    } catch (e) {}
   }
 
   Future<List<Nifty>> getNifty() async {
     http.Response res = await http.get(
-      Uri.parse(
-          '$uri/topmovers'),
+      Uri.parse('$uri/topmovers'),
       // headers: <String, String>{
       //   'Content-Type': 'application/json; charset=UTF-8',
       // },
